@@ -1,6 +1,3 @@
-group 'com.amitkhairnar.rootaccess'
-version '1.0-SNAPSHOT'
-
 buildscript {
     repositories {
         google()
@@ -12,26 +9,21 @@ buildscript {
     }
 }
 
-rootProject.allprojects {
+allprojects {
     repositories {
         google()
         jcenter()
     }
 }
 
-apply plugin: 'com.android.library'
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
 
-android {
-    compileSdkVersion 29
-
-    defaultConfig {
-        minSdkVersion 16
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    lintOptions {
-        disable 'InvalidPackage'
-    }
-    dependencies {
-        implementation files('lib/RootTools.jar')
-    }
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
